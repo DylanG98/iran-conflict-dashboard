@@ -1,23 +1,46 @@
+/* ── Google Fonts — Cinzel for title only ── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+/* ── Geometric top stripe (Arab pattern simulation) ── */
+body::before {
+    content: '';
+    display: block;
+    height: 2px;
+    background: repeating-linear-gradient(
+        90deg,
+        #C8960C 0px,    #C8960C 10px,
+        #8B1A1A 10px,   #8B1A1A 14px,
+        #C8960C 14px,   #C8960C 24px,
+        transparent 24px, transparent 32px
+    );
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+
 /* ── Base ── */
 * { box-sizing: border-box; }
 
 body {
-    background-color: #0d0d0d !important;
-    color: #e8e8e8;
+    background-color: #0a0a0a !important;
+    color: #D0C8B0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding-top: 2px; /* space for fixed stripe */
 }
 
 /* ── Live dot animation ── */
 @keyframes pulse {
-    0%   { opacity: 1;   box-shadow: 0 0 0 0 rgba(226,75,74,0.6); }
-    50%  { opacity: 0.7; box-shadow: 0 0 0 5px rgba(226,75,74,0); }
-    100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(226,75,74,0); }
+    0%   { opacity: 1;   box-shadow: 0 0 0 0 rgba(200,150,12,0.7); }
+    50%  { opacity: 0.7; box-shadow: 0 0 0 6px rgba(200,150,12,0); }
+    100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(200,150,12,0); }
 }
 
 .live-dot {
     width: 9px;
     height: 9px;
-    background-color: #E24B4A;
+    background-color: #C8960C;
     border-radius: 50%;
     animation: pulse 1.8s ease-in-out infinite;
     flex-shrink: 0;
@@ -25,46 +48,53 @@ body {
 
 /* ── Header ── */
 .dashboard-title {
-    font-size: 1.5rem;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 1.45rem;
     font-weight: 700;
-    color: #e8e8e8;
-    margin: 0 0 4px 0;
-    letter-spacing: -0.01em;
+    color: #F0E6C8;
+    margin: 0 0 6px 0;
+    letter-spacing: 0.02em;
 }
 
 .dashboard-subtitle {
-    font-size: 0.8rem;
-    color: #777;
+    font-size: 0.78rem;
+    color: #7A6A4A;
     margin: 0;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+}
+
+/* Header row border */
+.header-border-row {
+    border-bottom: 2px solid #C8960C;
+    margin-bottom: 20px;
 }
 
 /* ── KPI cards ── */
 .kpi-card {
-    background: #1a1a1a;
-    border: 1px solid #2e2e2e;
-    border-radius: 8px;
+    background: #111111;
+    border: 1px solid #2A2010;
+    border-radius: 6px;
     padding: 14px 16px;
     height: 100%;
-    transition: border-color 0.2s;
+    transition: border-color 0.25s;
 }
 
 .kpi-card:hover {
-    border-color: #444;
+    border-color: #C8960C;
 }
 
 .kpi-label {
-    font-size: 0.7rem;
-    color: #666;
+    font-size: 0.68rem;
+    color: #C8960C;
     margin: 0 0 4px 0;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
 }
 
 .kpi-value {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 700;
-    color: #e8e8e8;
+    color: #F0E6C8;
     margin: 0 0 4px 0;
     line-height: 1.1;
     white-space: nowrap;
@@ -78,75 +108,183 @@ body {
 
 /* ── Chart cards ── */
 .chart-card {
-    background: #1a1a1a;
-    border: 1px solid #2e2e2e;
-    border-radius: 8px;
+    background: #111111;
+    border: 1px solid #2A2010;
+    border-radius: 6px;
     padding: 16px;
     height: 100%;
 }
 
 .chart-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #aaa;
+    color: #C8960C;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     margin: 0 0 10px 0;
 }
 
-/* ── Date picker overrides ── */
+/* ── Ticker bar ── */
+@keyframes scroll-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-bar {
+    background: #0f0f0f;
+    border-top: 1px solid #2A2010;
+    border-bottom: 1px solid #2A2010;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.ticker-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: scroll-left 55s linear infinite;
+    padding-left: 100%;  /* start off-screen right */
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+/* ── Date picker dark overrides ── */
+.DateRangePicker,
 .DateRangePickerInput,
 .DateInput,
 .DateInput_input {
-    background-color: #1a1a1a !important;
-    border-color: #2e2e2e !important;
-    color: #e8e8e8 !important;
+    background-color: #1a1a0f !important;
+    color: #F0E6C8 !important;
+    border-color: #C8960C !important;
     font-family: system-ui !important;
     font-size: 0.82rem !important;
 }
 
+.DateInput_input {
+    border: 1px solid #C8960C !important;
+    border-radius: 3px !important;
+    padding: 4px 8px !important;
+}
+
 .DateInput_input__focused {
-    border-bottom-color: #E24B4A !important;
+    border-bottom-color: #F0C040 !important;
+    outline: none !important;
+}
+
+.DateRangePickerInput {
+    border: 1px solid #C8960C !important;
+    border-radius: 4px !important;
 }
 
 .DayPicker,
-.DayPicker_weekHeader,
+.DayPicker_weekHeader {
+    background: #111111 !important;
+    color: #F0E6C8 !important;
+}
+
 .CalendarDay__default {
-    background: #1a1a1a !important;
-    color: #e8e8e8 !important;
+    background: #111111 !important;
+    color: #D0C090 !important;
+    border-color: #2A2010 !important;
+}
+
+.CalendarDay__default:hover {
+    background: #2A2010 !important;
+    color: #F0E6C8 !important;
+}
+
+.CalendarDay__selected,
+.CalendarDay__selected:active,
+.CalendarDay__selected:hover {
+    background: #C8960C !important;
+    color: #0a0a0a !important;
+    border-color: #C8960C !important;
+}
+
+.CalendarDay__selected_span {
+    background: #7A5A08 !important;
+    color: #F0E6C8 !important;
+}
+
+.DayPickerNavigation_button {
+    border-color: #2A2010 !important;
+    background: #111111 !important;
+    color: #C8960C !important;
 }
 
 /* ── Dropdown (dcc.Dropdown) dark override ── */
+.Select-control,
 .dark-dropdown .Select-control {
-    background-color: #1a1a1a !important;
-    border-color: #2e2e2e !important;
-    color: #e8e8e8 !important;
+    background-color: #1a1a0f !important;
+    border: 1px solid #C8960C !important;
+    color: #F0E6C8 !important;
 }
 
+.Select-menu-outer,
 .dark-dropdown .Select-menu-outer {
-    background-color: #1a1a1a !important;
-    border-color: #2e2e2e !important;
+    background-color: #111111 !important;
+    border: 1px solid #C8960C !important;
+    color: #F0E6C8 !important;
 }
 
+.Select-option,
 .dark-dropdown .Select-option {
-    background-color: #1a1a1a !important;
-    color: #e8e8e8 !important;
+    background-color: #111111 !important;
+    color: #F0E6C8 !important;
 }
 
+.Select-option:hover,
+.Select-option.is-focused,
 .dark-dropdown .Select-option:hover,
 .dark-dropdown .Select-option.is-focused {
-    background-color: #2a2a2a !important;
+    background-color: #2A2010 !important;
+    color: #F0E6C8 !important;
 }
 
+.Select-option.is-selected {
+    background-color: #3A2A08 !important;
+    color: #F0E6C8 !important;
+}
+
+.Select-value-label,
 .dark-dropdown .Select-value-label {
-    color: #e8e8e8 !important;
+    color: #F0E6C8 !important;
 }
 
+.Select-placeholder,
 .dark-dropdown .Select-placeholder {
-    color: #666 !important;
+    color: #7A6A4A !important;
+}
+
+.Select-multi-value-wrapper {
+    background-color: #1a1a0f !important;
+}
+
+.Select-value {
+    background-color: #2A2010 !important;
+    border-color: #C8960C !important;
+    color: #F0E6C8 !important;
+}
+
+.Select-value-icon {
+    border-right-color: #C8960C !important;
+    color: #C8960C !important;
+}
+
+.Select-arrow {
+    border-top-color: #C8960C !important;
+}
+
+.Select-input > input {
+    color: #F0E6C8 !important;
 }
 
 /* ── Bootstrap overrides ── */
 .container-fluid {
-    background-color: #0d0d0d !important;
+    background-color: #0a0a0a !important;
 }

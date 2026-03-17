@@ -15,18 +15,19 @@ import dash_bootstrap_components as dbc
 # ─────────────────────────────────────────────────────────────────────────────
 # CONSTANTS
 # ─────────────────────────────────────────────────────────────────────────────
-CONFLICT_START = "2025-10-01"
+CONFLICT_START = "2026-02-28"
 OUTPUT_DIR = "./output"
 
-BG_PAGE  = "#0d0d0d"
-BG_CARD  = "#1a1a1a"
-BG_CHART = "#111111"
-TEXT     = "#e8e8e8"
-TEXT_DIM = "#777777"
+BG_PAGE  = "#0a0a0a"
+BG_CARD  = "#111111"
+BG_CHART = "#0f0f0f"
+TEXT     = "#F0E6C8"
+TEXT_DIM = "#7A6A4A"
 RED      = "#E24B4A"
 BLUE     = "#378ADD"
-GRID     = "#2a2a2a"
-BORDER   = "#2e2e2e"
+GOLD     = "#C8960C"
+GRID     = "#2A2010"
+BORDER   = "#2A2010"
 
 # Base chart layout applied to all figures
 CHART_BASE = dict(
@@ -219,6 +220,66 @@ TABLE_VARS = [
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
+# GEOPOLITICAL ALERTS TICKER  (static — no callback)
+# ─────────────────────────────────────────────────────────────────────────────
+_ALERTS = [
+    ("CRITICAL", "Iran closes Strait of Hormuz to commercial traffic — 21% of global oil supply disrupted"),
+    ("HIGH",     "OPEC+ emergency session called — production increase under discussion"),
+    ("HIGH",     "IDF strikes on Iranian nuclear facilities confirmed — Fordow, Natanz affected"),
+    ("MEDIUM",   "IMF cuts 2026 global growth forecast by 0.4pp citing energy shock"),
+    ("MEDIUM",   "US deploys additional carrier group to Persian Gulf — USS Gerald Ford"),
+    ("LOW",      "Argentina: oil export windfall partially offsets EMBI spread widening"),
+]
+
+_SEVERITY_STYLE = {
+    "CRITICAL": {"background": "#8B1A1A", "color": "#FFD0D0"},
+    "HIGH":     {"background": "#7A4500", "color": "#FFD0A0"},
+    "MEDIUM":   {"background": "#4A4A00", "color": "#FFFFA0"},
+    "LOW":      {"background": "#1A3A1A", "color": "#A0FFA0"},
+}
+
+_DIAMOND = html.Span(" \u25c6 ", style={"color": "#C8960C", "margin": "0 10px", "fontSize": "0.65rem"})
+
+
+def _build_ticker():
+    """Build the scrolling ticker content, duplicated for seamless looping."""
+    items = []
+    for severity, text in _ALERTS:
+        sty = _SEVERITY_STYLE.get(severity, _SEVERITY_STYLE["LOW"])
+        items.append(html.Span(
+            severity,
+            style={
+                "background": sty["background"],
+                "color": sty["color"],
+                "fontSize": "0.6rem",
+                "fontWeight": "700",
+                "padding": "2px 6px",
+                "borderRadius": "3px",
+                "marginRight": "8px",
+                "letterSpacing": "0.08em",
+                "verticalAlign": "middle",
+            },
+        ))
+        items.append(html.Span(
+            text,
+            style={
+                "color": "#D0C090",
+                "fontSize": "0.78rem",
+                "verticalAlign": "middle",
+            },
+        ))
+        items.append(_DIAMOND)
+
+    # Duplicate for seamless infinite scroll
+    track_content = items + items
+
+    return html.Div(
+        html.Div(track_content, className="ticker-track"),
+        className="ticker-bar",
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # APP INIT
 # ─────────────────────────────────────────────────────────────────────────────
 app = dash.Dash(
@@ -253,7 +314,7 @@ app.layout = dbc.Container(fluid=True,
                 html.Div([
                     html.Div(className="live-dot"),
                     html.Span("LIVE", style={
-                        "fontSize": "0.65rem", "color": RED, "fontWeight": "700",
+                        "fontSize": "0.65rem", "color": "#C8960C", "fontWeight": "700",
                         "marginLeft": "7px", "letterSpacing": "0.12em",
                     }),
                 ], style={"display": "flex", "alignItems": "center", "marginBottom": "6px"}),
@@ -264,7 +325,7 @@ app.layout = dbc.Container(fluid=True,
                     className="dashboard-subtitle",
                 ),
             ], style={"padding": "28px 0 16px"}),
-        ), style={"borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
+        ), className="header-border-row"),
 
         # ── DATE RANGE PICKER (global filter for all charts) ─────────────────
         dbc.Row(dbc.Col(
@@ -293,6 +354,12 @@ app.layout = dbc.Container(fluid=True,
             kpi_card("US 10Y Yield",        KPIS["us10y"][0], KPIS["us10y"][1], KPIS["us10y"][2]),
             kpi_card("2Y-10Y Spread",       KPIS["spread"][0],KPIS["spread"][1],KPIS["spread"][2]),
         ], className="g-2", style={"marginBottom": "20px"}),
+
+        # ── GEOPOLITICAL ALERTS TICKER ───────────────────────────────────────
+        dbc.Row(dbc.Col(
+            _build_ticker(),
+            style={"marginBottom": "20px"},
+        )),
 
         # ── SECTION 3: MAIN CHARTS ROW ───────────────────────────────────────
         dbc.Row([
@@ -387,7 +454,7 @@ def update_all(start_date, end_date, selected_series):
         fig_indexed.add_vline(x=CONFLICT_START, line_dash="dash", line_color=RED, line_width=1)
         fig_indexed.add_annotation(
             x=CONFLICT_START, y=1, yref="paper",
-            text="D0", font=dict(color=RED, size=10),
+            text="D0 — Feb 28", font=dict(color=RED, size=10),
             showarrow=False, xanchor="left", xshift=4,
         )
 
