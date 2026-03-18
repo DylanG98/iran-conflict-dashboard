@@ -1,7 +1,6 @@
 # Iran Conflict Dashboard
 
 [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-brightgreen)](https://iran-conflict-dashboard.onrender.com)
 
 Real-time economic war dashboard tracking the financial impact of the Iran conflict (D0 = Feb 28, 2026) on global markets. A two-component system: a Python data pipeline that pulls and normalizes 16+ economic series across 4 asset classes, and a deployed Plotly Dash web app with interactive charts, KPI cards, and a geopolitical alerts ticker.
@@ -170,4 +169,3 @@ All series are normalized to an index value of 100 at D0 (Feb 28, 2026) for conf
 
 ## License
 
-[MIT](LICENSE)
